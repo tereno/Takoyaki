@@ -39,7 +39,7 @@ to include your name with greetings you post.</p>
     // Run an ancestor query to ensure we see the most up-to-date
     // view of the Greetings belonging to the selected Guestbook.
     Query query = new Query("Link");
-    List<Entity> links = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(5));
+    List<Entity> links = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(5000));
     if (links.isEmpty()) {
         %>
         <p>There are no links.</p>
