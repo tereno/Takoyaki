@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List" %>
+<%@ page import="java.lang.Iterable" %>
 <%@ page import="com.google.appengine.api.users.User" %>
 <%@ page import="com.google.appengine.api.users.UserService" %>
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
@@ -34,32 +34,28 @@ to include your name with greetings you post.</p>
     }
 %>
 <%
+
+    if (user != null) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     
     // Run an ancestor query to ensure we see the most up-to-date
     // view of the Greetings belonging to the selected Guestbook.
-    Query query = new Query("Link");
-    List<Entity> links = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(5000));
-    if (links.isEmpty()) {
-        %>
-        <p>There are no links.</p>
-        <%
-    } else {
-        %>
+    Query query = new Query("Link", KeyFactory.createKey("User", user.getUserId()));
+    Iterable<Entity> links = datastore.prepare(query).asIterable();
+%>
         <p>Links</p>
         <table>
         <%
         for (Entity link : links) {
-            %>
+        %>
             <tr>
-                <td><%= link.getProperty("name") %></td>
-                <td><%= link.getProperty("href") %></td>
+                <td><a href="<%= link.getProperty("href") %>"><%= link.getProperty("name") %></a></td>
             </tr>
-            <%
+        <%
         }
         %>
         </table>
-        <%
+<%
     }
 %>
         <form action="/stash" method="POST">

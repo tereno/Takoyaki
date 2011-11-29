@@ -33,7 +33,8 @@ public class StashServlet extends HttpServlet {
         }
 
         if (user != null) {
-            Entity link = new Entity("Link");
+            Key userKey = KeyFactory.createKey("User", user.getUserId());
+            Entity link = new Entity("Link", userKey);
             link.setProperty("name", link_name);
             link.setProperty("href", link_href);
 
